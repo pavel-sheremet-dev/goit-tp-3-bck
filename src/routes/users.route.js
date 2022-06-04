@@ -11,7 +11,7 @@ const router = Router();
 
 router.post(
   '/signup',
-  validateRequest(schema.signing),
+  validateRequest(schema.signup),
   ctrlWrapper(controller.signUp),
 );
 

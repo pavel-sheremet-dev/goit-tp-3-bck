@@ -1,5 +1,6 @@
-const serializeUser = ({ id, email }) => ({
+const serializeUser = ({ id, name, email }) => ({
   id,
+  name,
   email,
 });
 

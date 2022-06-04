@@ -8,7 +8,8 @@ const {
   Gone,
   PreconditionFailed,
 } = require('http-errors');
-const { auth, createAvatarUrl, mailService } = require('../helpers');
+
+const { auth, mailService } = require('../helpers');
 
 const signUp = async (reqParams, baseUrl) => {
   const { email, password } = reqParams;
@@ -19,7 +20,6 @@ const signUp = async (reqParams, baseUrl) => {
   const user = await User.create({
     ...reqParams,
     password: hashPassword,
-    avatarUrl: createAvatarUrl(email),
     verificationToken,
   });
 
@@ -67,7 +67,7 @@ const signIn = async ({ email, password }) => {
 
   const isValidPassword = await auth.comparePassword(password, user.password);
 
-  if (!isValidPassword) throw new Forbidden('Password is wrong');
+  if (!isValidPassword) throw new Forbidden('Email or password is wrong');
 
   if (!user.verified) {
     throw new PreconditionFailed('User was not verified ');

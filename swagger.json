@@ -1,9 +1,9 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.0.2",
   "info": {
     "version": "1.0.1",
     "title": "Book reading",
-    "description": "Showing off swagger-ui-express",
+    "description": "Backend for an app designed for people who want to read books and record their progress",
     "license": {
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
@@ -11,11 +11,19 @@
   },
   "consumes": ["application/json"],
   "produces": ["application/json"],
-  "servers": [{ "url": "http://localhost:3000" }],
+  "servers": [{ "url": "http://localhost:7778" }],
   "tags": [
     {
       "name": "Auth",
       "description": "Authorization endpoints"
+    },
+    {
+      "name": "Books",
+      "description": "Books endpoints. All requests along the way  '/api/books' but different methods "
+    },
+    {
+      "name": "Tranings",
+      "description": "Traning endpoints. All requests along the way  '/api/traning' but different methods"
     }
   ],
   "paths": {
@@ -24,7 +32,6 @@
         "tags": ["Auth"],
         "summary": "User registration",
         "parameters": [],
-        "security": [],
         "requestBody": {
           "description": "Registration's object",
           "required": true,
@@ -63,7 +70,6 @@
         "tags": ["Auth"],
         "summary": "User login",
         "parameters": [],
-        "security": [],
         "requestBody": {
           "description": "Login's object",
           "required": true,
@@ -103,30 +109,23 @@
     "/api/users/verify": {
       "post": {
         "tags": ["Auth"],
-        "summary": "User verification",
+        "summary": "User verification. Used to send an email to the user to confirm the mail",
         "parameters": [],
-        "security": [],
         "requestBody": {
           "description": "Verification object",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegistrationRequest"
+                "$ref": "#/components/schemas/VerifyRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RegistrationResponse"
-                }
-              }
-            }
+            "description": "Successful operation. Verification email has been sent to user mail",
+            "content": {}
           },
           "400": {
             "description": "Verification has already been passed",
@@ -139,30 +138,29 @@
         }
       }
     },
-    "/api/users/verify/:verificationToken": {
+    "/api/users/verify/": {
       "get": {
         "tags": ["Auth"],
-        "summary": "User verification",
-        "parameters": [],
-        "security": [],
+        "summary": "User verification. Used in email confirmation mail",
+        "parameters": [{
+          "in":"path", 
+          "name": "verificationToken",
+          "required":true,
+          "type": "string",
+          "description": "User's token"
+        }],
         "requestBody": {},
         "responses": {
           "200": {
             "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RegistrationResponse"
-                }
-              }
-            }
-          },
+            "content": {}
+            },
           "410": {
             "description": "Verification link is not valid, expired or has already been use",
             "content": {}
           }
+          }  
         }
-      }
     },
     "/api/users/logout": {
       "get": {
@@ -174,8 +172,7 @@
         "responses": {
           "204": {
             "description": "Successful operation",
-            "content": {
-            }
+            "content": {}
           }
         }
       }
@@ -193,13 +190,215 @@
             "content": {
                 "application/json": {
                     "schema": {
-                        "$ref": "#/components/schemas/RegistrationRequest"
+                        "$ref": "#/components/schemas/RegistrationResponse"
               }
             }
             }
           },
           "404":{
               "description": "User not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/books":{
+      "post": {
+        "tags": ["Books"],
+        "summary": "Add book",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Book object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookAddRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookAddResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Book has already",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/books/":{
+      "get": {
+        "tags": ["Books"],
+        "summary": "Get all book. Value status is not required",
+        "parameters": [{
+          "in":"query", 
+          "name": "status",
+          "required": false,
+          "type": "string",
+          "description": "Books status for add book in Traning"
+        }],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookGetAllResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No books found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/books//":{
+    "patch":{
+      "tags": ["Books"],
+        "summary": "Get all book. Value status is not required",
+        "parameters": [{
+          "in":"path", 
+          "name": "bookId",
+          "required": true,
+          "type": "string",
+          "description": "Books id"
+        }],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Book update object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookAddResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No books found",
+            "content": {}
+          },
+          "409": {
+            "description": "Book not read",
+            "content": {}
+          }
+        }
+    }
+    },
+    "/api/trainings":{
+      "post": {
+        "tags": ["Tranings"],
+        "summary": "Add traning",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Book object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TraningRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TraningResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trainings/":{
+      "get": {
+        "tags": ["Tranings"],
+        "summary": "Get active traning",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": { },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TraningResponse"
+                }
+              }
+            }
+          },
+          "404":{
+            "description": "Active training not Found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/trainings//":{
+      "patch": {
+        "tags": ["Tranings"],
+        "summary": "Update active traning",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Traning object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TraningUpdateRequest"
+              }
+            }
+          }
+         },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TraningResponse"
+                }
+              }
+            }
+          },
+          "404":{
+            "description": "Active training not Found",
             "content": {}
           }
         }
@@ -220,13 +419,63 @@
           "password": {
             "type": "string",
             "description": "User's password",
-            "example": "qwerty123"
+            "example": "12345qwerty"
           }
         }
       },
       "LoginResponse": {
         "type": "object",
         "properties": {
+          "user": { 
+            "type": "object",
+            "properties": {
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email"
+            },
+            "name": {
+              "type": "string",
+              "description": "User's name",
+              "example": "John Dou"
+            },
+            "id": {
+              "type": "number",
+              "description": "User's id",
+              "example": "32143232436545474"
+            }}
+          },
+            "token": {
+              "type": "string",
+              "description": "User's token",
+              "example": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NSIsIm5hbWUiOiJKb2huIEdvbGQiLCJhZG1pbiI6dHJ1ZX0K.LIHjWCBORSWMEibq-tnT8ue_deUqZx1K0XxCOXZRrBI"
+            }
+        }
+        },
+      "RegistrationRequest":{
+          "type": "object",
+          "required": ["email","name", "password"],
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email"
+            },
+            "name": {
+              "type": "string",
+              "description": "User's name",
+              "example": "John Dou"
+            },
+            "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+            }
+          }
+        },
+      "RegistrationResponse": {
+          "type": "object",
+          "properties": {
             "email": {
               "type": "string",
               "description": "User's email",
@@ -243,8 +492,332 @@
               "example": "32143232436545474"
             }
           }
-        }       
-      }
+        },
+      "VerifyRequest": {
+          "type": "object",
+          "required": ["email"],
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email"
+            }
+          }
+
+      },
+      "BookAddRequest":{
+        "type": "object",
+        "required": ["name", "author", "year", "pages"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Book name",
+            "example": "Master and Margarita"
+          },
+          "author": {
+            "type": "string",
+            "description": "Book author",
+            "example": "Bulgakov"
+          },
+          "year": {
+            "type": "number",
+            "description": "Book year",
+            "example": "1967"
+          },
+          "pages": {
+            "type": "number",
+            "description": "Book year",
+            "example": "384 "
+          }
+        }
+      },
+      "BookAddResponse":{
+        "type": "object",
+          "properties": {
+            "id":{
+              "type": "string",
+              "description": "id from DB",
+              "example": "5643gr57tr578hg5464"
+            },
+            "name": {
+            "type": "string",
+            "description": "Book name",
+            "example": "Master and Margarita"
+          },
+          "author": {
+            "type": "string",
+            "description": "Book author",
+            "example": "Bulgakov"
+          },
+          "year": {
+            "type": "number",
+            "description": "Book year",
+            "example": "1967"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status book default unread",
+            "example": "unread "
+          },
+          "pages": {
+            "type": "number",
+            "description": "Book year",
+            "example": "384 "
+          },
+          "rating": {
+            "type": "number",
+            "description": "User rating book. Default null",
+            "example": "null"
+          },
+          "review": {
+            "type": "string",
+            "description": "User rating book. Default null",
+            "example": "null"
+          }
+          }
+      },
+      "BookGetAllResponse":{
+         "type": "object",
+         "properties": {
+           "library":{
+             "type":"object",
+             "properties":{
+               "unread": {
+                  "type":"array",
+                  "items":{
+                    "type":"object", 
+                    "properties":{
+                      "id":{
+                      "type": "string",
+                      "description": "id from DB",
+                      "example": "5643gr57tr578hg5464"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Book name",
+                      "example": "Master and Margarita"
+                    },
+                    "author": {
+                      "type": "string",
+                      "description": "Book author",
+                      "example": "Bulgakov"
+                    },
+                    "year": {
+                      "type": "number",
+                      "description": "Book year",
+                      "example": "1967"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Status book default unread",
+                      "example": "unread "
+                    },
+                    "pages": {
+                      "type": "number",
+                      "description": "Book year",
+                      "example": "384 "
+                    },
+                    "rating": {
+                      "type": "number",
+                      "description": "User rating book. Default null",
+                      "example": "null"
+                    },
+                    "review": {
+                      "type": "string",
+                      "description": "User rating book. Default null",
+                      "example": "null"
+                    }
+                    }
+                  }
+                },
+               "reading?": {
+                 "type":"array",
+                  "items":{
+                    "type":"object", 
+                    "properties":{
+                      "id":{
+                      "type": "string",
+                      "description": "id from DB",
+                      "example": "5643gr57tr578hg5464"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Book name",
+                      "example": "Master and Margarita"
+                    },
+                    "author": {
+                      "type": "string",
+                      "description": "Book author",
+                      "example": "Bulgakov"
+                    },
+                    "year": {
+                      "type": "number",
+                      "description": "Book year",
+                      "example": "1967"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Status book default unread",
+                      "example": "unread "
+                    },
+                    "pages": {
+                      "type": "number",
+                      "description": "Book year",
+                      "example": "384 "
+                    },
+                    "rating": {
+                      "type": "number",
+                      "description": "User rating book. Default null",
+                      "example": "null"
+                    },
+                    "review": {
+                      "type": "string",
+                      "description": "User rating book. Default null",
+                      "example": "null"
+                    }
+                    }
+                  }
+                },
+               "finished?": {
+                 "type":"array",
+                  "items":{
+                    "type":"object", 
+                    "properties":{
+                      "id":{
+                      "type": "string",
+                      "description": "id from DB",
+                      "example": "5643gr57tr578hg5464"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Book name",
+                      "example": "Master and Margarita"
+                    },
+                    "author": {
+                      "type": "string",
+                      "description": "Book author",
+                      "example": "Bulgakov"
+                    },
+                    "year": {
+                      "type": "number",
+                      "description": "Book year",
+                      "example": "1967"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Status book default unread",
+                      "example": "unread "
+                    },
+                    "pages": {
+                      "type": "number",
+                      "description": "Book year",
+                      "example": "384 "
+                    },
+                    "rating": {
+                      "type": "number",
+                      "description": "User rating book. Default null",
+                      "example": "null"
+                    },
+                    "review": {
+                      "type": "string",
+                      "description": "User rating book. Default null",
+                      "example": "null"
+                    }
+                    }
+                  }
+               }
+             }
+           }
+         }
+
+      },
+      "BookUpdateRequest":{
+        "type": "object",
+        "required": ["rating", "review"],
+        "properties": {
+          "rating": {
+            "type": "number",
+            "description": "User rating book.",
+            "example": "5"
+          },
+          "review": {
+            "type": "string",
+            "description": "User rating book. ",
+            "example": "This book is very nice"
+          }}
+      },
+      "TraningRequest":{
+        "type": "object",
+        "required": ["startDate", "deadlineDate", "books"],
+        "properties": {
+          "deadlineDate": {
+            "type": "string",
+            "description": "Deadline date traning",
+            "example": "2022-06-25T01:43:27.042Z"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Start date traning",
+            "example": "2022-06-20T01:42:27.042Z"
+          },
+          "books": {
+            "type": "array",
+            "description": "Array books",
+            "example": "[{book1},{book2}]"
+          }}
+      },
+      "TraningResponse":{
+        "type": "object",
+        "properties":{
+          "startDate": {
+            "type": "string",
+            "description": "Start date traning",
+            "example": "2022-06-20T01:42:27.042Z"},
+          "deadlineDate": {
+            "type": "string",
+            "description": "Deadline date traning",
+            "example": "2022-06-25T01:43:27.042Z"
+          },
+          "totalPages": {
+            "type": "number",
+            "description": "Total pages books",
+            "example": "122"
+          },
+          "readedPages": { 
+            "type": "number",
+            "description": "Readed pages books",
+            "example": "100"
+          },
+          "results": {
+            "type":"array",
+            "description": "Array of readed pages",
+            "items": {
+              "type":"object",
+              "description": "One point",
+              "properties":{
+                "date": {
+                  "type":"string",
+                  "example": "2022-06-20T01:42:27.042Z"
+                },
+                "pointResult": {
+                  "type":"number",
+                  "example": "30"
+                }
+              }
+            }
+          } 
+        }
+      },
+      "TraningUpdateRequest":{
+         "type": "object",
+        "required": ["pointResult"],
+        "properties": {
+          "pointResult": {
+            "type": "number",
+            "description": "Number of pages read",
+            "example": "30"
+          }}
+      }  
     },
     "securitySchemes": {
       "Bearer": {
@@ -252,5 +825,6 @@
         "scheme": "bearer",
         "bearerFormat": "JWT"
       }
-    }
+    }   
+  }
   }

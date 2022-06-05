@@ -2,7 +2,7 @@ const { auth } = require('./auth');
 const { checkObjectId, compareTrainingDates } = require('./joi');
 const { mailService } = require('./mailService');
 const { getFromQueryParams } = require('./mongo');
-const { filter } = require('./books');
+const { filter } = require('./book');
 
 exports.checkObjectId = checkObjectId;
 exports.compareTrainingDates = compareTrainingDates;

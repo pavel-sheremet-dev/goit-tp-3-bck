@@ -9,7 +9,7 @@ const serializeBook = ({
   review,
 }) => ({ id, name, author, year, pages, status, rating, review });
 
-const serializeBooks = ({ library }) => ({
+const serializeBooks = library => ({
   library,
 });
 

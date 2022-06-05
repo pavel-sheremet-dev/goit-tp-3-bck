@@ -18,12 +18,13 @@ const bookSchema = new Schema(
     },
     year: {
       type: Number,
-      max: 4,
+      min: 1000,
+      max: 3999,
       required: [true, 'Year book is required'],
     },
     pages: {
       type: Number,
-      max: 4,
+      max: 9999,
       required: [true, 'Amount pages book is required'],
     },
     status: {
@@ -40,6 +41,10 @@ const bookSchema = new Schema(
     review: {
       type: String,
       default: null,
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
     },
   },
   { timestamps: true },

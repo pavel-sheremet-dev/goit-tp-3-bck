@@ -1,0 +1,256 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0.1",
+    "title": "Book reading",
+    "description": "Showing off swagger-ui-express",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "servers": [{ "url": "http://localhost:3000" }],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    }
+  ],
+  "paths": {
+    "/api/users/signup": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User registration",
+        "parameters": [],
+        "security": [],
+        "requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "409": {
+            "description": "User with email already exist",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/users/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User login",
+        "parameters": [],
+        "security": [],
+        "requestBody": {
+          "description": "Login's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "403":{
+              "description": "Email or password is wrong"
+          },
+          "404": {
+            "description": "User not found. Please check email or sign up",
+            "content": {}
+          },  
+          "412": {
+            "description": "User was not verified",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/users/verify": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User verification",
+        "parameters": [],
+        "security": [],
+        "requestBody": {
+          "description": "Verification object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Verification has already been passed",
+            "content": {}
+          },
+          "404":{
+              "description": "User with email was not found. Please check email or sign up",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/users/verify/:verificationToken": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "User verification",
+        "parameters": [],
+        "security": [],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Verification link is not valid, expired or has already been use",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/users/logout": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "User logout",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {},
+        "responses": {
+          "204": {
+            "description": "Successful operation",
+            "content": {
+            }
+          }
+        }
+      }
+    },
+    "/api/users/current": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get current user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+            }
+          },
+          "404":{
+              "description": "User not found",
+            "content": {}
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email"
+            },
+            "name": {
+              "type": "string",
+              "description": "User's name",
+              "example": "John Dou"
+            },
+            "id": {
+              "type": "number",
+              "description": "User's id",
+              "example": "32143232436545474"
+            }
+          }
+        }       
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }

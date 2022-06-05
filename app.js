@@ -1,6 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 const { getEnv } = require('./src/config');
 const { exampleRouter, usersRouter } = require('./src/routes');
 
@@ -18,6 +20,7 @@ app.use(morgan(formatsLogger));
 
 app.use('/api/example', exampleRouter);
 app.use('/api/users', usersRouter);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req, res) => {
   res.status(404).send({ message: 'Page Not found' });

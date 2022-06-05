@@ -10,4 +10,18 @@ const getEnv = () => ({
   SERVER_BASE_URL: process.env.SERVER_BASE_URL,
 });
 
-exports.config = { getEnv };
+const getBookStatus = () => ({
+  all: ['unread', 'nowReading', 'finished'],
+  unread: 'unread',
+  nowReading: 'nowReading',
+  finished: 'finished',
+});
+
+const getTrainingStatus = () => ({
+  all: ['active', 'successDone', 'failed'],
+  active: 'active',
+  successDone: 'successDone',
+  failed: 'failed',
+});
+
+exports.config = { getEnv, getBookStatus, getTrainingStatus };

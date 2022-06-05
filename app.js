@@ -2,7 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const { getEnv } = require('./src/config');
-const { exampleRouter, usersRouter } = require('./src/routes');
+const { exampleRouter, usersRouter, trainingsRouter } = require('./src/routes');
 
 const CORS = getEnv().CORS ?? '*';
 
@@ -18,6 +18,7 @@ app.use(morgan(formatsLogger));
 
 app.use('/api/example', exampleRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/trainings', trainingsRouter);
 
 app.use((req, res) => {
   res.status(404).send({ message: 'Page Not found' });

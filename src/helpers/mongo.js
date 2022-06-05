@@ -4,4 +4,4 @@ const getFromQueryParams = params =>
     return { ...acc, [key]: params[key] };
   }, {});
 
-exports.filters = { getFromQueryParams };
+exports.getFromQueryParams = { getFromQueryParams };

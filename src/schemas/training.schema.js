@@ -8,9 +8,13 @@ const books = joi.object({
 });
 
 const training = joi.object({
-  startDate: joi.date().min('now').required(),
+  startDate: joi.date().required(),
   deadlineDate: joi.date().custom(compareTrainingDates),
   books: joi.array().items(books),
 });
 
-exports.trainingsSchema = { training };
+const updateTraining = joi.object({
+  pointResult: joi.number().min(1).required(),
+});
+
+exports.trainingsSchema = { training, updateTraining };

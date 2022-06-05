@@ -23,6 +23,20 @@ const booksSchema = new Schema(
   { _id: false },
 );
 
+const resultsSchema = new Schema(
+  {
+    date: {
+      type: Date,
+      required: [true, 'Result date is required'],
+    },
+    pointResult: {
+      type: Number,
+      required: [true, 'Point reading pages result is required'],
+    },
+  },
+  { _id: false },
+);
+
 const trainingSchema = new Schema(
   {
     startDate: {
@@ -33,7 +47,7 @@ const trainingSchema = new Schema(
       type: Date,
       required: [true, 'Deadline Date is required'],
     },
-    readPages: {
+    readedPages: {
       type: Number,
       required: [true],
     },
@@ -54,19 +68,22 @@ const trainingSchema = new Schema(
       enum: config.getTrainingStatus().all,
       default: config.getTrainingStatus().active,
     },
+    results: {
+      type: [resultsSchema],
+      required: [true, 'results is required'],
+    },
   },
   { timestamps: true },
 );
 
 const populateOwner = function (...fieds) {
-  console.log(fieds);
   return function () {
     this.populate('owner', fieds);
   };
 };
 
 trainingSchema.pre(
-  ['find', 'findOne', 'findOneAndUpdate', 'save'],
+  ['find', 'findOne', 'findOneAndUpdate'],
   populateOwner('email'),
 );
 

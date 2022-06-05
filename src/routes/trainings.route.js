@@ -16,6 +16,13 @@ router.post(
   ctrlWrapper(controller.addTraining),
 );
 
-router.get('/active', authhorize(), ctrlWrapper(controller.getActiveTraining));
+router.get('/', authhorize(), ctrlWrapper(controller.getActiveTraining));
+
+router.patch(
+  '/',
+  authhorize(),
+  validateRequest(schema.updateTraining),
+  ctrlWrapper(controller.updateActiveTraining),
+);
 
 module.exports = router;

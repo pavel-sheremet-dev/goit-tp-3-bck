@@ -1,21 +1,31 @@
+const { trainingsSerializes } = require('../serialize');
 const { trainingsService: service } = require('../services');
-// const { usersSerializes } = require('../serialize');
+
+const { serializeTraining } = trainingsSerializes;
 
 const addTraining = async (req, res) => {
   const training = await service.addTraining({
     ...req.body,
     owner: req.user.id,
   });
-  res.status(201).send(training);
+  res.status(201).send(serializeTraining(training));
 };
 
 const getActiveTraining = async (req, res) => {
   const { id: owner } = req.user;
   const training = await service.getActiveTraining({ owner });
-  res.status(200).send(training);
+  res.status(200).send(serializeTraining(training));
+};
+
+const updateActiveTraining = async (req, res) => {
+  const { id: owner } = req.user;
+  const { pointResult } = req.body;
+  const training = await service.updateActiveTraining({ owner, pointResult });
+  res.status(201).send(serializeTraining(training));
 };
 
 exports.trainingsController = {
   addTraining,
   getActiveTraining,
+  updateActiveTraining,
 };

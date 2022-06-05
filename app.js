@@ -4,7 +4,7 @@ const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 const { getEnv } = require('./src/config');
-const { exampleRouter, usersRouter } = require('./src/routes');
+const { usersRouter, trainingsRouter } = require('./src/routes');
 
 const CORS = getEnv().CORS ?? '*';
 
@@ -18,8 +18,8 @@ app.use(morgan(formatsLogger));
 
 // app.use(express.static('static'));
 
-app.use('/api/example', exampleRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/trainings', trainingsRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req, res) => {

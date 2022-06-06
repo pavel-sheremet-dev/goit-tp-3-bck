@@ -2,7 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const { getEnv } = require('./src/config');
-const { usersRouter, trainingsRouter } = require('./src/routes');
+const { usersRouter, trainingsRouter, booksRouter } = require('./src/routes');
 
 const CORS = getEnv().CORS ?? '*';
 
@@ -16,8 +16,8 @@ app.use(morgan(formatsLogger));
 
 // app.use(express.static('static'));
 
-
 app.use('/api/users', usersRouter);
+app.use('/api/books', booksRouter);
 app.use('/api/trainings', trainingsRouter);
 
 app.use((req, res) => {

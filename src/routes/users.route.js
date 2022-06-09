@@ -33,4 +33,8 @@ router.get('/logout', authhorize(), ctrlWrapper(controller.signOut));
 
 router.get('/current', authhorize(), ctrlWrapper(controller.getCurrentUser));
 
+router.get('/google', ctrlWrapper(controller.googleAuth));
+
+router.get('/google-redirect', ctrlWrapper(controller.googleRedirect));
+
 module.exports = router;

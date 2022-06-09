@@ -23,6 +23,7 @@
   "homepage": "https://github.com/pavel-sheremet-dev/goit-tp-3-bck#readme",
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
+    "axios": "^0.27.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
@@ -33,6 +34,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.5",
     "morgan": "^1.10.0",
+    "query-string": "^7.1.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

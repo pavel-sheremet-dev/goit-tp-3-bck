@@ -3,7 +3,7 @@ const joi = require('joi');
 const signup = joi.object({
   name: joi
     .string()
-    .pattern(/^[A-Za-zА-Яа-яґҐЁёІіЇїЄє'’ʼ\\s-]{3,30}$/)
+    .pattern(/^[A-Za-zА-Яа-яґҐЁёІіЇїЄє'’ʼ\s-]{3,30}$/)
     .required(),
   email: joi.string().email().required(),
   password: joi

@@ -34,7 +34,11 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.5",
     "morgan": "^1.10.0",
+<<<<<<< HEAD
     "query-string": "^7.1.1",
+=======
+    "swagger-ui-express": "^4.4.0",
+>>>>>>> dev
     "uuid": "^8.3.2"
   },
   "devDependencies": {

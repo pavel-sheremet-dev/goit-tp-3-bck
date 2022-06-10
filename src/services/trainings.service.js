@@ -1,20 +1,30 @@
 // const uuid = require('uuid').v4;
 
-const { config } = require('../config/config');
-const { Training } = require('../models');
-
 const { NotFound } = require('http-errors');
+const { Training } = require('../models');
+const { config } = require('../config/config');
+const { finished, nowReading, unread } = config.getBookStatus();
+const { booksService } = require('./books.service');
+
+const { changeBooksStatus, getBookIdsByStatus } = booksService;
 
 const addTraining = async reqParams => {
-  const { startDate: date, books } = reqParams;
+  const { startDate: date, books, owner } = reqParams;
 
   const totalPages = books.reduce((acc, book) => acc + book.pages, 0);
+  const bookIds = books.map(book => book.id);
+
+  await changeBooksStatus(owner, bookIds, nowReading);
+
+  const fields = { ...reqParams, books: bookIds };
+
   const training = await Training.create({
-    ...reqParams,
+    ...fields,
     totalPages,
     readedPages: 0,
     results: [{ date, pointResult: 0 }],
   });
+
   return training;
 };
 
@@ -37,6 +47,10 @@ const updateActiveTraining = async ({ owner, pointResult }) => {
   const readedPages = training.readedPages + pointResult;
 
   if (deadlineDate < new Date()) {
+    const bookIds = getBookIdsByStatus(books, nowReading);
+
+    await changeBooksStatus(owner, bookIds, unread);
+
     const failedTraining = await failedTrainingFinish({
       deadlineDate,
       results,
@@ -44,31 +58,32 @@ const updateActiveTraining = async ({ owner, pointResult }) => {
       owner,
       readedPages,
     });
+
     return failedTraining;
   }
 
   results.push({ date: new Date(), pointResult });
+
+  const bookIds = [];
+
   books.reduce((acc, book, id) => {
-    switch (true) {
-      case acc >= books[id].pages:
-        books[id].status = config.getBookStatus().finished;
-        return acc - books[id].pages;
-      case acc < books[id].pages:
-        return 0;
-      default:
-        return null;
+    if (acc < books[id].pages) return acc - Infinity;
+    if (books[id].status !== finished) {
+      bookIds.push(books[id]._id);
     }
+    return acc - books[id].pages;
   }, readedPages);
 
-  if (readedPages >= totalPages) {
-    results.push({ date: deadlineDate, pointResult: 0 });
+  if (bookIds.length) {
+    await changeBooksStatus(owner, bookIds, finished);
+  }
 
+  if (readedPages >= totalPages) {
     const successDoneTraining = await Training.findOneAndUpdate(
       { status, owner },
       {
         readedPages: totalPages,
         status: config.getTrainingStatus().successDone,
-        books,
         results,
       },
       { new: true },
@@ -78,14 +93,27 @@ const updateActiveTraining = async ({ owner, pointResult }) => {
 
   const updatedTraining = Training.findOneAndUpdate(
     { status, owner },
-    { readedPages, books, results },
+    { readedPages, results },
     { new: true },
   );
 
   return updatedTraining;
 };
 
-const finishTraining = async ({ owner }) => {
+const failedTrainingFinish = async failedOptionts => {
+  const { deadlineDate, results, status, owner, readedPages, pointResult } =
+    failedOptionts;
+  results.push({ date: deadlineDate, pointResult });
+
+  const failedTraining = await Training.findOneAndUpdate(
+    { status, owner },
+    { readedPages, status: config.getTrainingStatus().failed, results },
+    { new: true },
+  );
+  return failedTraining;
+};
+
+const finishTraining = async ({ owner, pointResult = 0 }) => {
   const status = config.getTrainingStatus().active;
   const training = await Training.findOne({ status, owner });
 
@@ -99,20 +127,8 @@ const finishTraining = async ({ owner }) => {
     status,
     owner,
     readedPages,
+    pointResult,
   });
-  return failedTraining;
-};
-
-const failedTrainingFinish = async failedOptionts => {
-  const { deadlineDate, results, status, owner, readedPages } = failedOptionts;
-  console.log('tyt');
-  results.push({ date: deadlineDate, pointResult: 0 });
-
-  const failedTraining = await Training.findOneAndUpdate(
-    { status, owner },
-    { readedPages, status: config.getTrainingStatus().failed, results },
-    { new: true },
-  );
   return failedTraining;
 };
 

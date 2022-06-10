@@ -44,8 +44,22 @@ const updateBook = async ({ id, owner, rating, review }) => {
   return book;
 };
 
+const changeBooksStatus = async (owner, bookIdsArray, status) =>
+  await Book.find({
+    owner,
+    _id: { $in: bookIdsArray },
+  }).updateMany({ status });
+
+const getBookIdsByStatus = (books, status) =>
+  books.reduce(
+    (acc, book) => (book.status === status ? [...acc, book._id] : acc),
+    [],
+  );
+
 exports.booksService = {
   addBook,
   getAllBooks,
   updateBook,
+  changeBooksStatus,
+  getBookIdsByStatus,
 };

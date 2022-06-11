@@ -37,7 +37,7 @@ const getActiveTraining = async ({ owner }) => {
   return training;
 };
 
-const updateActiveTraining = async ({ owner, pointResult }) => {
+const updateActiveTraining = async ({ owner, pointResult, date }) => {
   const status = config.getTrainingStatus().active;
   const training = await Training.findOne({ status, owner });
 
@@ -46,8 +46,27 @@ const updateActiveTraining = async ({ owner, pointResult }) => {
   const { books, totalPages, deadlineDate, results } = training;
   const readedPages = training.readedPages + pointResult;
 
-  if (deadlineDate < new Date()) {
+  results.push({ date, pointResult });
+
+  const bookIds = [];
+
+  books.reduce((acc, book, id) => {
+    if (acc < books[id].pages) return acc - Infinity;
+    if (books[id].status !== finished) {
+      bookIds.push(books[id]._id);
+      books[id].status = finished;
+    }
+    return acc - books[id].pages;
+  }, readedPages);
+
+  if (bookIds.length) {
+    await changeBooksStatus(owner, bookIds, finished);
+  }
+
+  if (deadlineDate < date) {
     const bookIds = getBookIdsByStatus(books, nowReading);
+
+    console.log('bookIds', bookIds);
 
     await changeBooksStatus(owner, bookIds, unread);
 
@@ -56,26 +75,10 @@ const updateActiveTraining = async ({ owner, pointResult }) => {
       results,
       status,
       owner,
-      readedPages,
+      readedPages: readedPages > totalPages ? totalPages : readedPages,
     });
 
     return failedTraining;
-  }
-
-  results.push({ date: new Date(), pointResult });
-
-  const bookIds = [];
-
-  books.reduce((acc, book, id) => {
-    if (acc < books[id].pages) return acc - Infinity;
-    if (books[id].status !== finished) {
-      bookIds.push(books[id]._id);
-    }
-    return acc - books[id].pages;
-  }, readedPages);
-
-  if (bookIds.length) {
-    await changeBooksStatus(owner, bookIds, finished);
   }
 
   if (readedPages >= totalPages) {

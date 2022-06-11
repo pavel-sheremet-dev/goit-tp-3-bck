@@ -14,6 +14,7 @@ const training = joi.object({
 });
 
 const updateTraining = joi.object({
+  date: joi.date().required(),
   pointResult: joi.number().min(1).required(),
 });
 

@@ -19,8 +19,12 @@ const getActiveTraining = async (req, res) => {
 
 const updateActiveTraining = async (req, res) => {
   const { id: owner } = req.user;
-  const { pointResult } = req.body;
-  const training = await service.updateActiveTraining({ owner, pointResult });
+  const { pointResult, date } = req.body;
+  const training = await service.updateActiveTraining({
+    owner,
+    pointResult,
+    date,
+  });
   res.status(201).send(serializeTraining(training));
 };
 

@@ -1,11 +1,9 @@
 const serializeUser = ({ id, name, email }) => ({
-  id,
-  name,
-  email,
+  user: { id, name, email },
 });
 
 const serializeSignInResponce = ({ user, token }) => ({
-  user: serializeUser(user),
+  user: serializeUser(user).user,
   token,
 });
 

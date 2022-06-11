@@ -6,6 +6,9 @@ const swaggerDocument = require('./swagger.json');
 const { getEnv } = require('./src/config');
 const { usersRouter, trainingsRouter, booksRouter } = require('./src/routes');
 
+
+const mongoose = require("mongoose");
+
 const CORS = getEnv().CORS ?? '*';
 
 const app = express();
@@ -35,4 +38,15 @@ app.use((err, req, res, next) => {
   // res.status(statusCode).send({ message: err.stack });
 });
 
+
+
+const { DB_HOST } = process.env; 
+
+
+
+
+mongoose
+  .connect(DB_HOST)
+  .then(() => console.log("Database connection successful"))
+  .catch((error) => console.log(error.message));
 module.exports = app;

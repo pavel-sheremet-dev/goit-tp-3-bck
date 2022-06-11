@@ -4,24 +4,15 @@ const mongoose = require('mongoose');
 const { config } = require('../config/config');
 const { Schema } = mongoose;
 
-const booksSchema = new Schema(
-  {
-    id: {
-      type: Schema.Types.ObjectId,
-      required: [true, 'Book id is required'],
-    },
-    pages: {
-      type: Number,
-      required: [true, 'Book pages is required'],
-    },
-    status: {
-      type: String,
-      enum: config.getBookStatus().all,
-      default: config.getBookStatus().unread,
-    },
-  },
-  { _id: false },
-);
+// const booksSchema = new Schema(
+//   {
+//     id: {
+//       type: Schema.Types.ObjectId,
+//       ref: 'Book',
+//     },
+//   },
+//   { _id: false },
+// );
 
 const resultsSchema = new Schema(
   {
@@ -55,10 +46,12 @@ const trainingSchema = new Schema(
       type: Number,
       required: [true, 'Total pages is required'],
     },
-    books: {
-      type: [booksSchema],
-      required: [true, 'Books list is required'],
-    },
+    books: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Book',
+      },
+    ],
     owner: {
       type: Schema.Types.ObjectId,
       ref: 'User',
@@ -76,16 +69,31 @@ const trainingSchema = new Schema(
   { timestamps: true },
 );
 
-const populateOwner = function (...fieds) {
+const populateOwner = function (...fields) {
   return function () {
-    this.populate('owner', fieds);
+    this.populate('owner', fields);
+  };
+};
+
+const populateBook = function (...fields) {
+  return function () {
+    this.populate('books', fields);
   };
 };
 
 trainingSchema.pre(
   ['find', 'findOne', 'findOneAndUpdate'],
-  populateOwner('email'),
+  populateOwner('email', 'name'),
 );
+trainingSchema.pre(
+  ['find', 'findOne', 'findOneAndUpdate'],
+  populateBook('pages', 'status'),
+);
+trainingSchema.post('save', function (doc, next) {
+  doc.populate('books', ['pages', 'status']).then(function () {
+    next();
+  });
+});
 
 // https://mongoosejs.com/docs/schematypes.html#dates
 

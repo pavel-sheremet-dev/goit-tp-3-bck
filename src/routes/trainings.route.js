@@ -25,4 +25,6 @@ router.patch(
   ctrlWrapper(controller.updateActiveTraining),
 );
 
+router.patch('/finish', authhorize(), ctrlWrapper(controller.finishTraining));
+
 module.exports = router;

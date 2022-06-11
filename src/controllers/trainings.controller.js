@@ -24,8 +24,15 @@ const updateActiveTraining = async (req, res) => {
   res.status(201).send(serializeTraining(training));
 };
 
+const finishTraining = async (req, res) => {
+  const { id: owner } = req.user;
+  const training = await service.finishTraining({ owner });
+  res.status(201).send(serializeTraining(training));
+};
+
 exports.trainingsController = {
   addTraining,
   getActiveTraining,
   updateActiveTraining,
+  finishTraining,
 };

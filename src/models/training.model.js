@@ -4,16 +4,6 @@ const mongoose = require('mongoose');
 const { config } = require('../config/config');
 const { Schema } = mongoose;
 
-// const booksSchema = new Schema(
-//   {
-//     id: {
-//       type: Schema.Types.ObjectId,
-//       ref: 'Book',
-//     },
-//   },
-//   { _id: false },
-// );
-
 const resultsSchema = new Schema(
   {
     date: {

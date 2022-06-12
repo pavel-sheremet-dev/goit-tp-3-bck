@@ -66,8 +66,6 @@ const updateActiveTraining = async ({ owner, pointResult, date }) => {
   if (deadlineDate < date) {
     const bookIds = getBookIdsByStatus(books, nowReading);
 
-    console.log('bookIds', bookIds);
-
     await changeBooksStatus(owner, bookIds, unread);
 
     const failedTraining = await failedTrainingFinish({

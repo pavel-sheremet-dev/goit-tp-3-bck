@@ -37,7 +37,6 @@ const getVerificationUrl = (baseRoutePath, verificationToken) =>
 
 const sendVerificationEmail = async (to, baseRoutePath, verificationToken) => {
   const verificationUrl = getVerificationUrl(baseRoutePath, verificationToken);
-
   const msg = {
     to,
     from: process.env.SENDGRID_SENDER,

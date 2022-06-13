@@ -1,7 +1,10 @@
-const serializeBooks = ({ id, pages, status }) => ({
+const serializeBooks = ({ id, name, author, year, pages, status }) => ({
   id,
-  pages,
   status,
+  name,
+  author,
+  year,
+  pages,
 });
 
 const serializeTraining = ({

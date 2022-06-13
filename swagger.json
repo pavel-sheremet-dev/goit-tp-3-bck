@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.0.2",
+    "version": "2.0.0",
     "title": "Book reading",
     "description": "Backend for an app designed for people who want to read books and record their progress",
     "license": {
@@ -11,7 +11,7 @@
   },
   "consumes": ["application/json"],
   "produces": ["application/json"],
-  "servers": [{ "url": "http://localhost:7778" }],
+  "servers": [{ "url": "http://localhost:7778"}],
   "tags": [
     {
       "name": "Auth",
@@ -162,6 +162,24 @@
           }  
         }
     },
+    "/api/users/google": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get google auth. After executing the Google logic, an automatic transition to /api/users/google-redirect",
+        "parameters": [],
+        "security": [],
+        "requestBody": {}
+      }
+    },
+    "/api/users/google-redirect": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "The logic for adding a user and updating its token is executed. There is a redirect to the page Front-end/api/users/oauth",
+        "parameters": [],
+        "security": [],
+        "requestBody": {}
+      }
+    },
     "/api/users/logout": {
       "get": {
         "tags": ["Auth"],
@@ -202,6 +220,7 @@
         }
       }
     },
+    
     "/api/books":{
       "post": {
         "tags": ["Books"],

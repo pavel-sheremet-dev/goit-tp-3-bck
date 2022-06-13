@@ -77,12 +77,14 @@ trainingSchema.pre(
 );
 trainingSchema.pre(
   ['find', 'findOne', 'findOneAndUpdate'],
-  populateBook('pages', 'status'),
+  populateBook('pages', 'status', 'name', 'author', 'year'),
 );
 trainingSchema.post('save', function (doc, next) {
-  doc.populate('books', ['pages', 'status']).then(function () {
-    next();
-  });
+  doc
+    .populate('books', ['pages', 'status', 'name', 'author', 'year'])
+    .then(function () {
+      next();
+    });
 });
 
 // https://mongoosejs.com/docs/schematypes.html#dates

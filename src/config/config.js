@@ -8,6 +8,9 @@ const getEnv = () => ({
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
   SENDGRID_SENDER: process.env.SENDGRID_SENDER,
   SERVER_BASE_URL: process.env.SERVER_BASE_URL,
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+  FRONTEND_URL: process.env.FRONTEND_URL,
 });
 
 const getBookStatus = () => ({

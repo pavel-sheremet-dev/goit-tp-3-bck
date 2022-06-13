@@ -33,16 +33,18 @@ const sendEmailWithControl = async msg => {
 };
 
 const getVerificationUrl = (baseRoutePath, verificationToken) =>
-  `${process.env.SERVER_BASE_URL}${baseRoutePath}/verify/${verificationToken}`;
+  `${process.env.FRONTEND_URL}${baseRoutePath}/verify/${verificationToken}`;
 
 const sendVerificationEmail = async (to, baseRoutePath, verificationToken) => {
   const verificationUrl = getVerificationUrl(baseRoutePath, verificationToken);
   const msg = {
     to,
     from: process.env.SENDGRID_SENDER,
-    subject: '[Backend] Please confirm your email address',
-    text: `Go to this link to confirm your email: ${verificationUrl}`,
-    html: `<a href="${verificationUrl}">Click to confirm your email</a>`,
+    subject: '[Book Reading Service] Підтвердження реєстрації',
+    text: `Вітаємо! Ви зареєструвались у додатку Books Reading. Перейдіть, будь ласка, за ${verificationUrl}посиланням для верифікації вашої пошти. Ставте цілі і досягайте їх! Ви все зможете:-)`,
+    html: `<p>Вітаємо!<br/>
+    Ви зареєструвались у додатку Books Reading. Перейдіть, будь ласка, за <a href="${verificationUrl}"><b>посиланням</b></a>  для верифікації вашої пошти.
+    Ставте цілі і досягайте їх! Ви все зможете:-)</p>`,
     // templateId: 'd-fdc51d8492a047879ae5e8a4ea903125',
     // dynamicTemplateData: {
     //   verificationUrl,

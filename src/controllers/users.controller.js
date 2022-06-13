@@ -109,7 +109,6 @@ const googleRedirect = async (req, res) => {
     resToken = token;
   } else {
     const tokenNew = auth.createToken(user);
-    console.log(tokenNew);
     const { token } = await User.findByIdAndUpdate(
       user.id,
       { token: tokenNew },

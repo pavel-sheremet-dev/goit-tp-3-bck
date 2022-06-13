@@ -11,7 +11,6 @@ const serializeBook = ({
 
 const serializeBooks = library => {
   const keys = Object.keys(library);
-  console.log('keys', keys);
 
   const obj = {
     library: Object.keys(library).reduce((acc, status) => {

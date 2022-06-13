@@ -77,7 +77,7 @@ trainingSchema.pre(
 );
 trainingSchema.pre(
   ['find', 'findOne', 'findOneAndUpdate'],
-  populateBook('pages', 'status'),
+  populateBook('pages', 'status', 'name', 'author', 'year'),
 );
 trainingSchema.post('save', function (doc, next) {
   doc

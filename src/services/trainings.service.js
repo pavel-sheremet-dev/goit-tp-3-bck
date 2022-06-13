@@ -5,18 +5,22 @@ const { Training } = require('../models');
 const { config } = require('../config/config');
 const { finished, nowReading, unread } = config.getBookStatus();
 const { booksService } = require('./books.service');
+const { getStartDate } = require('../helpers');
 
 const { changeBooksStatus, getBookIdsByStatus } = booksService;
 
 const addTraining = async reqParams => {
-  const { startDate: date, books, owner } = reqParams;
+  const { startDate: date, books, owner, deadlineDate: endDate } = reqParams;
 
   const totalPages = books.reduce((acc, book) => acc + book.pages, 0);
   const bookIds = books.map(book => book.id);
 
+  const startDate = getStartDate(date);
+  const deadlineDate = getStartDate(endDate, true);
+
   await changeBooksStatus(owner, bookIds, nowReading);
 
-  const fields = { ...reqParams, books: bookIds };
+  const fields = { ...reqParams, books: bookIds, startDate, deadlineDate };
 
   const training = await Training.create({
     ...fields,

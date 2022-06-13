@@ -1,6 +1,10 @@
 const joi = require('joi');
 
-const { checkObjectId, compareTrainingDates } = require('../helpers');
+const {
+  checkObjectId,
+  compareTrainingDates,
+  startOfCurrentDate,
+} = require('../helpers');
 
 const books = joi.object({
   id: joi.string().custom(checkObjectId).required(),
@@ -8,7 +12,7 @@ const books = joi.object({
 });
 
 const training = joi.object({
-  startDate: joi.date().min('now').required(),
+  startDate: joi.date().custom(startOfCurrentDate).required(),
   deadlineDate: joi.date().custom(compareTrainingDates),
   books: joi.array().items(books),
 });

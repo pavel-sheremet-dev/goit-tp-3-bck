@@ -33,7 +33,7 @@ const sendEmailWithControl = async msg => {
 };
 
 const getVerificationUrl = (baseRoutePath, verificationToken) =>
-  `${process.env.SERVER_BASE_URL}${baseRoutePath}/verify/${verificationToken}`;
+  `${process.env.FRONTEND_URL}${baseRoutePath}/verify/${verificationToken}`;
 
 const sendVerificationEmail = async (to, baseRoutePath, verificationToken) => {
   const verificationUrl = getVerificationUrl(baseRoutePath, verificationToken);

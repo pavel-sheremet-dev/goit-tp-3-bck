@@ -29,7 +29,7 @@ router.post(
   ctrlWrapper(controller.signIn),
 );
 
-router.get('/logout', authhorize(), ctrlWrapper(controller.signOut));
+router.post('/logout', authhorize(), ctrlWrapper(controller.signOut));
 
 router.get('/current', authhorize(), ctrlWrapper(controller.getCurrentUser));
 

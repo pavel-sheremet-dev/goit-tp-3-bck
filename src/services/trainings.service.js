@@ -26,7 +26,7 @@ const addTraining = async reqParams => {
     ...fields,
     totalPages,
     readedPages: 0,
-    results: [{ date, pointResult: 0 }],
+    results: [{ date: startDate, pointResult: 0 }],
   });
 
   return training;

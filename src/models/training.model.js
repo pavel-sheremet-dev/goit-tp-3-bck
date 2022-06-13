@@ -80,9 +80,11 @@ trainingSchema.pre(
   populateBook('pages', 'status'),
 );
 trainingSchema.post('save', function (doc, next) {
-  doc.populate('books', ['pages', 'status']).then(function () {
-    next();
-  });
+  doc
+    .populate('books', ['pages', 'status', 'name', 'author', 'year'])
+    .then(function () {
+      next();
+    });
 });
 
 // https://mongoosejs.com/docs/schematypes.html#dates

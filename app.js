@@ -19,7 +19,6 @@ app.use(express.json());
 app.use(cors({ origin: CORS }));
 app.use(morgan(formatsLogger));
 
-// app.use(express.static('static'));
 
 app.use('/api/users', usersRouter);
 app.use('/api/books', booksRouter);
@@ -33,9 +32,6 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   const statusCode = err.status ?? 500;
   res.status(statusCode).send({ message: err.message });
-  // если вылетает 500 ошибка и вы не знаете где она возникла, то 27 строку комментируете, 30 разкомментируте
-  // и будет вам видно весь стек ошибки. Ну или пользуйтесь дебагером или как вам удобно
-  // res.status(statusCode).send({ message: err.stack });
 });
 
 

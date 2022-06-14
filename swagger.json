@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "2.0.0",
+    "version": "3.0.0",
     "title": "Book reading",
     "description": "Backend for an app designed for people who want to read books and record their progress",
     "license": {
@@ -828,9 +828,9 @@
         "type": "object",
         "properties":{
           "id": {
-                      "type": "string",
-                      "description": "id from DB",
-                      "example": "5643gr57tr578hg5464"
+            "type": "string",
+            "description": "id from DB",
+            "example": "5643gr57tr578hg5464"
           },
           "status":{
             "type": "String",
@@ -877,24 +877,39 @@
           }, 
           "books":{
             "type":"array",
-            "item":{
+            "items":{
               "type":"object",
               "properties":{
-                "id": {
+                 "id":{
                       "type": "string",
                       "description": "id from DB",
                       "example": "5643gr57tr578hg5464"
-                },
-                "pages":{
-                  "type": "number",
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Book name",
+                      "example": "Master and Margarita"
+                    },
+                    "author": {
+                      "type": "string",
+                      "description": "Book author",
+                      "example": "Bulgakov"
+                    },
+                    "year": {
+                      "type": "number",
+                      "description": "Book year",
+                      "example": "1967"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Status book default unread",
+                      "example": "unread "
+                    },
+                    "pages": {
+                      "type": "number",
                       "description": "Book year",
                       "example": "384 "
-                },
-                "status":{
-                  "type": "string",
-                      "description": "Status book default unread",
-                      "example": "unread or nowReading or finished"
-                }
+                    }
               }
             }
           }

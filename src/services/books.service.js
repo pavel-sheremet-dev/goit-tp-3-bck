@@ -29,18 +29,16 @@ const getAllBooks = async params => {
 };
 
 const updateBook = async ({ id, owner, rating, review }) => {
-  const bookFinish = Book.findOne({ _id: id, owner });
-  if (!bookFinish) {
-    throw new NotFound('No books found');
-  }
-  if (bookFinish.status !== config.getBookStatus().finished) {
-    throw new Conflict('Book not read');
-  }
   const book = Book.findOneAndUpdate(
     { _id: id, owner },
     { rating, review },
     { new: true },
   );
+
+  if (!book) {
+    throw new NotFound('No books found');
+  }
+
   return book;
 };
 

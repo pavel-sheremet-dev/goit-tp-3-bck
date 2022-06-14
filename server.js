@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const { getEnv } = require('./src/config');
 
 const app = require('./app');
-const PORT = getEnv().PORT ?? 3000;
 const MONGO_URI = getEnv().MONGO_URI;
 
 const start = async () => {

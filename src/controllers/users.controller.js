@@ -4,15 +4,11 @@
 
 const { usersService: service } = require('../services');
 const { usersSerializes } = require('../serialize');
-<<<<<<< HEAD
-// const { User } = require('../models/users.model');
-=======
 const { getEnv } = require('../config');
 const queryString = require('query-string');
 const axios = require('axios');
 const { User } = require('../models');
 const { auth } = require('../helpers');
->>>>>>> dev
 
 const { serializeUser, serializeSignInResponce } = usersSerializes;
 

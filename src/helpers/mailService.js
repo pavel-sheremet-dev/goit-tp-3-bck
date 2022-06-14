@@ -41,7 +41,7 @@ const sendVerificationEmail = async (to, baseRoutePath, verificationToken) => {
     to,
     from: process.env.SENDGRID_SENDER,
     subject: '[Book Reading Service] Підтвердження реєстрації',
-    text: `Вітаємо! Ви зареєструвались у додатку Books Reading. Перейдіть, будь ласка, за ${verificationUrl}посиланням для верифікації вашої пошти. Ставте цілі і досягайте їх! Ви все зможете:-)`,
+    text: `Вітаємо! Ви зареєструвались у додатку Books Reading. Перейдіть, будь ласка, за ${verificationUrl} посиланням для верифікації вашої пошти. Ставте цілі і досягайте їх! Ви все зможете:-)`,
     html: `<table
     align="center"
     border="0"

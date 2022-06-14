@@ -16,8 +16,8 @@ const start = async () => {
     process.exit(1);
   }
 
-  app.listen(PORT, () => {
-    console.log(`Server running. Use our API on port: ${PORT}`);
+  app.listen(process.env.PORT, () => {
+    console.log(`Server running. Use our API on port: ${process.env.PORT}`);
   });
 };
 

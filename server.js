@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const { getEnv } = require('./src/config');
 
 const app = require('./app');
-const PORT = getEnv().PORT ?? 3000;
 const MONGO_URI = getEnv().MONGO_URI;
 
 const start = async () => {
@@ -16,8 +15,8 @@ const start = async () => {
     process.exit(1);
   }
 
-  app.listen(PORT, () => {
-    console.log(`Server running. Use our API on port: ${PORT}`);
+  app.listen(process.env.PORT, () => {
+    console.log(`Server running. Use our API on port: ${process.env.PORT}`);
   });
 };
 

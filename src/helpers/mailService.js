@@ -70,7 +70,7 @@ const sendVerificationEmail = async (to, baseRoutePath, verificationToken) => {
         <td style="text-align: center; padding: 24px 60px 0;">
           <a
             href="${verificationUrl}"
-            style="text-align: center; font-size: 20px; margin: 0 auto; color: #ffffff; text-decoration: none; width: 100%; background-color: #ff6b08; border-radius: 7px; padding: 10px 17px; box-shadow:0px 2px 4px rgba(0, 0, 0, 0.25);"
+            style="text-align: center; font-size: 16px; margin: 0 auto; color: #ffffff; text-decoration: none; width: 100%; background-color: #ff6b08; border-radius: 7px; padding: 10px 17px; box-shadow:0px 2px 4px rgba(0, 0, 0, 0.25);"
           >
             Підтвердити реєстрацію
           </a>

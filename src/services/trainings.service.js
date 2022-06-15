@@ -73,7 +73,6 @@ const updateActiveTraining = async ({ owner, pointResult, date }) => {
     await changeBooksStatus(owner, bookIds, unread);
 
     const failedTraining = await failedTrainingFinish({
-      deadlineDate,
       results,
       status,
       owner,
@@ -106,9 +105,7 @@ const updateActiveTraining = async ({ owner, pointResult, date }) => {
 };
 
 const failedTrainingFinish = async failedOptionts => {
-  const { deadlineDate, results, status, owner, readedPages, pointResult } =
-    failedOptionts;
-  results.push({ date: deadlineDate, pointResult });
+  const { results, status, owner, readedPages } = failedOptionts;
 
   const failedTraining = await Training.findOneAndUpdate(
     { status, owner },
@@ -126,13 +123,13 @@ const finishTraining = async ({ owner, pointResult = 0 }) => {
 
   const { results, deadlineDate, readedPages } = training;
 
+  results.push({ date: deadlineDate, pointResult });
+
   const failedTraining = await failedTrainingFinish({
-    deadlineDate,
     results,
     status,
     owner,
     readedPages,
-    pointResult,
   });
   return failedTraining;
 };

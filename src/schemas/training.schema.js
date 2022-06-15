@@ -14,7 +14,7 @@ const books = joi.object({
 const training = joi.object({
   startDate: joi.date().custom(startOfCurrentDate).required(),
   deadlineDate: joi.date().custom(compareTrainingDates),
-  books: joi.array().items(books),
+  books: joi.array().items(books).min(1),
 });
 
 const updateTraining = joi.object({
